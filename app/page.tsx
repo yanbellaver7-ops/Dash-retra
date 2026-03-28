@@ -1,6 +1,7 @@
 import Sidebar from '@/components/Sidebar'
 import Header from '@/components/Header'
 import KPICard from '@/components/KPICard'
+import RevenueChart from '@/components/RevenueChart'
 import TopProducts from '@/components/TopProducts'
 import MonthlyRevenue from '@/components/MonthlyRevenue'
 import StatesSales from '@/components/StatesSales'
@@ -21,7 +22,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Card produto — col 2, span 2 linhas */}
+        {/* Card produto — col 2, span 2 linhas (KPIs + Gráfico) */}
         <div
           className="row-span-2 rounded-2xl flex items-center justify-center p-4 group"
           style={{
@@ -35,6 +36,9 @@ export default function DashboardPage() {
             className="w-full max-h-[480px] object-contain transition-transform duration-700 ease-in-out group-hover:rotate-12 group-hover:scale-110"
           />
         </div>
+
+        {/* RevenueChart — col 1 */}
+        <RevenueChart />
 
         {/* TopProducts — col 1 */}
         <TopProducts />
