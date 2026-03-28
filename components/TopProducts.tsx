@@ -18,7 +18,7 @@ export default function TopProducts() {
             <p className="text-xs text-white/40 mb-3">{p.periodo}</p>
             <p
               className="text-lg font-bold text-white mb-2"
-              style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+              style={{ fontFamily: 'var(--font-inter), sans-serif' }}
             >
               {formatBRL(p.valor)}
             </p>

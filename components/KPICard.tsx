@@ -24,7 +24,7 @@ export default function KPICard({ label, value, change, positive }: KPICardProps
       </div>
       <p
         className="text-2xl font-bold text-white tracking-tight"
-        style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+        style={{ fontFamily: 'var(--font-inter), sans-serif' }}
       >
         {value}
       </p>

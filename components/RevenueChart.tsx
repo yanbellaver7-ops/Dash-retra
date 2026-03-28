@@ -56,7 +56,7 @@ export default function RevenueChart() {
           <div className="flex items-baseline gap-2 mt-1">
             <span
               className="text-3xl font-bold gradient-purple-text"
-              style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+              style={{ fontFamily: 'var(--font-inter), sans-serif' }}
             >
               R$ 0,00
             </span>

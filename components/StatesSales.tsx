@@ -62,7 +62,7 @@ export default function StatesSales({
                     <p className="text-sm text-white/80 font-medium truncate">{s.nome}</p>
                     <p
                       className="text-xs font-semibold ml-2 shrink-0"
-                      style={{ fontFamily: 'var(--font-geist-mono), monospace', color: s.color }}
+                      style={{ fontFamily: 'var(--font-inter), sans-serif', color: s.color }}
                     >
                       {formatBRL(s.valor)}
                     </p>

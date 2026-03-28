@@ -81,7 +81,7 @@ export default function EstoquePage() {
           <p className="text-sm text-white/50 mb-2">Total em estoque</p>
           <p
             className="text-5xl font-bold text-white"
-            style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+            style={{ fontFamily: 'var(--font-inter), sans-serif' }}
           >
             {loading ? '—' : total}
           </p>
@@ -157,7 +157,7 @@ export default function EstoquePage() {
                     <span
                       className="text-sm font-bold"
                       style={{
-                        fontFamily: 'var(--font-geist-mono), monospace',
+                        fontFamily: 'var(--font-inter), sans-serif',
                         color: m.tipo === 'entrada' ? '#4ade80' : '#f87171',
                       }}
                     >

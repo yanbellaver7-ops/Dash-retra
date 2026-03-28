@@ -151,7 +151,7 @@ export default function VendasPage() {
                   {/* Código */}
                   <span
                     className="text-sm font-bold"
-                    style={{ color: '#A855F7', fontFamily: 'var(--font-geist-mono), monospace' }}
+                    style={{ color: '#A855F7', fontFamily: 'var(--font-inter), sans-serif' }}
                   >
                     {venda.payt_order_id?.slice(0, 8).toUpperCase() || '—'}
                   </span>
@@ -183,7 +183,7 @@ export default function VendasPage() {
                   {/* Valor */}
                   <p
                     className="text-sm font-semibold text-white"
-                    style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+                    style={{ fontFamily: 'var(--font-inter), sans-serif' }}
                   >
                     {formatBRL(venda.valor || 0)}
                   </p>

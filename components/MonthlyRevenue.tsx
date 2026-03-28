@@ -17,7 +17,7 @@ export default function MonthlyRevenue({ transactions }: { transactions: Transac
 
       <p
         className="text-xl font-bold text-white mb-2"
-        style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+        style={{ fontFamily: 'var(--font-inter), sans-serif' }}
       >
         {formatBRL(total)}
       </p>
@@ -39,7 +39,7 @@ export default function MonthlyRevenue({ transactions }: { transactions: Transac
               </div>
               <p
                 className="text-xs font-semibold text-white"
-                style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+                style={{ fontFamily: 'var(--font-inter), sans-serif' }}
               >
                 {formatBRL(t.valor)}
               </p>

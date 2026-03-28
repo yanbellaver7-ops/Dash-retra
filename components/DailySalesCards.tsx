@@ -108,7 +108,7 @@ export default function DailySalesCards() {
         <p className="text-xs text-white/50 font-medium mb-1.5">Vendas do Dia</p>
         <p
           className="text-xl font-bold text-white"
-          style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+          style={{ fontFamily: 'var(--font-inter), sans-serif' }}
         >
           {data?.vendasDia ?? 0}
         </p>
@@ -119,7 +119,7 @@ export default function DailySalesCards() {
         <p className="text-xs text-white/50 font-medium mb-1.5">Média Diária</p>
         <p
           className="text-xl font-bold text-white"
-          style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+          style={{ fontFamily: 'var(--font-inter), sans-serif' }}
         >
           {formatBRL(data?.mediaDiaria ?? 0)}
         </p>
@@ -141,7 +141,7 @@ export default function DailySalesCards() {
         <p
           className="text-xl font-bold"
           style={{
-            fontFamily: 'var(--font-geist-mono), monospace',
+            fontFamily: 'var(--font-inter), sans-serif',
             color: (data?.pendentesDia ?? 0) > 0 ? '#fbbf24' : 'rgba(255,255,255,0.9)',
           }}
         >
