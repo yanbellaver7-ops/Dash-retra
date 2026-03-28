@@ -6,7 +6,6 @@ export default function Header() {
       className="flex items-center px-6 py-4"
       style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
     >
-      <h1 className="text-xl font-semibold text-white">Dashboard de Vendas</h1>
     </header>
   )
 }
