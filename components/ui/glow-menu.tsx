@@ -42,14 +42,6 @@ const glowVariants = {
   },
 }
 
-const navGlowVariants = {
-  initial: { opacity: 0 },
-  hover: {
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeInOut" as const },
-  },
-}
-
 const sharedTransition = {
   type: "spring" as const,
   stiffness: 100,
@@ -60,20 +52,10 @@ const sharedTransition = {
 export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
   ({ className, items, activeItem }, ref) => {
     return (
-      <motion.div
+      <div
         ref={ref}
         className={cn("relative", className)}
-        initial="initial"
-        whileHover="hover"
       >
-        <motion.div
-          className="absolute -inset-2 rounded-3xl z-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(168,85,247,0.15) 0%, rgba(124,58,237,0.08) 50%, transparent 100%)",
-          }}
-          variants={navGlowVariants}
-        />
         <ul className="flex items-center gap-1 relative z-10">
           {items.map((item) => {
             const Icon = item.icon
@@ -143,7 +125,7 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
             )
           })}
         </ul>
-      </motion.div>
+      </div>
     )
   },
 )
