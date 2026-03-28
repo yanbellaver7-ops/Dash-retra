@@ -8,7 +8,7 @@ import { useTheme } from '@/lib/theme-context'
 const menuItems = [
   { label: 'Dashboard', href: '/' },
   { label: 'Vendas', href: '/vendas' },
-  { label: 'Produtos', href: '#' },
+  { label: 'Estoque', href: '/estoque' },
   { label: 'Clientes', href: '#' },
   { label: 'Relatórios', href: '#' },
   { label: 'Configurações', href: '#' },

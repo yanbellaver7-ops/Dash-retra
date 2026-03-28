@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
+const APPROVED = ['paid', 'approved']
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = createClient(
@@ -21,11 +23,32 @@ export async function POST(request: NextRequest) {
       created_at: body.created_at || new Date().toISOString(),
     }
 
+    // Verifica se era aprovada antes (para não deduzir duas vezes)
+    const { data: vendaExistente } = await supabase
+      .from('vendas')
+      .select('status')
+      .eq('payt_order_id', body.order_id)
+      .single()
+
     const { error } = await supabase
       .from('vendas')
       .upsert(venda, { onConflict: 'payt_order_id' })
 
     if (error) throw error
+
+    // Deduz estoque apenas quando venda passa a ser aprovada pela primeira vez
+    const eraAprovada = vendaExistente && APPROVED.includes(vendaExistente.status)
+    const agoraAprovada = APPROVED.includes(body.status)
+
+    if (agoraAprovada && !eraAprovada) {
+      const quantidade = body.quantity ?? 1
+      await supabase.rpc('ajustar_estoque', { delta: -quantidade })
+      await supabase.from('estoque_movimentos').insert({
+        tipo: 'saida',
+        quantidade,
+        descricao: `Venda #${body.order_id?.slice(0, 8).toUpperCase()} — ${body.customer?.name || 'Cliente'}`,
+      })
+    }
 
     return NextResponse.json({ received: true }, { status: 200 })
   } catch (error) {
