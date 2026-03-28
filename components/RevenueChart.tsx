@@ -58,13 +58,13 @@ export default function RevenueChart() {
               className="text-3xl font-bold gradient-purple-text"
               style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
             >
-              R$ 487.293,00
+              R$ 0,00
             </span>
             <span
               className="text-sm font-semibold px-2 py-0.5 rounded-full"
               style={{ color: 'rgba(255,255,255,0.8)', background: 'rgba(255,255,255,0.08)' }}
             >
-              +6.7%
+              +0%
             </span>
           </div>
         </div>
