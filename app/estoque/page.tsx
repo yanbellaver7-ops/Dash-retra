@@ -21,12 +21,15 @@ export default function EstoquePage() {
   const [qtd, setQtd] = useState('')
   const [saving, setSaving] = useState(false)
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  function getSupabase() {
+    return createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+  }
 
   async function fetchEstoque() {
+    const supabase = getSupabase()
     const { data: mov } = await supabase
       .from('estoque_movimentos')
       .select('*')
@@ -53,6 +56,7 @@ export default function EstoquePage() {
     if (!n || n <= 0) return
     setSaving(true)
 
+    const supabase = getSupabase()
     await supabase.rpc('ajustar_estoque', { delta: n })
     await supabase.from('estoque_movimentos').insert({
       tipo: 'entrada',
