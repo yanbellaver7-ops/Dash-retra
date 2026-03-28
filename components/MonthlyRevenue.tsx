@@ -12,39 +12,37 @@ export default function MonthlyRevenue({ transactions }: { transactions: Transac
   const total = transactions.reduce((acc, t) => acc + t.valor, 0)
 
   return (
-    <GlowCard className="p-5">
-      <p className="text-sm font-semibold text-white mb-4">Últimas Vendas</p>
+    <GlowCard className="p-3">
+      <p className="text-xs font-semibold text-white/50 mb-2">Últimas Vendas</p>
 
       <p
-        className="text-3xl font-bold text-white mb-1"
+        className="text-xl font-bold text-white mb-2"
         style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
       >
         {formatBRL(total)}
       </p>
 
-      <div className="flex flex-col gap-3 mt-4">
+      <div className="flex flex-col gap-2">
         {transactions.length === 0 ? (
           <p className="text-xs text-white/30 text-center py-4">Nenhuma venda ainda.</p>
         ) : (
           transactions.map((t) => (
             <div key={t.nome} className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
                 <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white"
+                  className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold text-white"
                   style={{ background: 'rgba(255,255,255,0.08)' }}
                 >
                   {t.nome.charAt(0)}
                 </div>
-                <p className="text-sm text-white/80 font-medium">{t.nome}</p>
+                <p className="text-xs text-white/80 font-medium">{t.nome}</p>
               </div>
-              <div className="text-right">
-                <p
-                  className="text-sm font-semibold text-white"
-                  style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
-                >
-                  {formatBRL(t.valor)}
-                </p>
-              </div>
+              <p
+                className="text-xs font-semibold text-white"
+                style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+              >
+                {formatBRL(t.valor)}
+              </p>
             </div>
           ))
         )}

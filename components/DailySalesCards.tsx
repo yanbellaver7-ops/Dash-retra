@@ -101,42 +101,37 @@ export default function DailySalesCards() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-3">
 
       {/* Vendas do Dia */}
-      <GlowCard className="p-5">
-        <p className="text-sm text-white/50 font-medium mb-3">Vendas do Dia</p>
+      <GlowCard className="p-3">
+        <p className="text-xs text-white/50 font-medium mb-1.5">Vendas do Dia</p>
         <p
-          className="text-3xl font-bold text-white mb-1"
+          className="text-xl font-bold text-white"
           style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
         >
           {data?.vendasDia ?? 0}
         </p>
-        <p className="text-xs text-white/40">
-          {formatBRL(data?.receitaDia ?? 0)} em receita hoje
-        </p>
-        <p className="text-xs text-white/25 mt-1">Zera às 23:59</p>
       </GlowCard>
 
       {/* Média de Vendas Diária */}
-      <GlowCard className="p-5">
-        <p className="text-sm text-white/50 font-medium mb-3">Média de Vendas Diária</p>
+      <GlowCard className="p-3">
+        <p className="text-xs text-white/50 font-medium mb-1.5">Média Diária</p>
         <p
-          className="text-3xl font-bold text-white mb-1"
+          className="text-xl font-bold text-white"
           style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
         >
           {formatBRL(data?.mediaDiaria ?? 0)}
         </p>
-        <p className="text-xs text-white/40">Faturamento médio por dia</p>
       </GlowCard>
 
       {/* Vendas Pendentes do Dia */}
-      <GlowCard className="p-5">
-        <div className="flex items-start justify-between mb-3">
-          <p className="text-sm text-white/50 font-medium">Pendentes do Dia</p>
+      <GlowCard className="p-3">
+        <div className="flex items-center justify-between mb-1.5">
+          <p className="text-xs text-white/50 font-medium">Pendentes do Dia</p>
           {(data?.pendentesDia ?? 0) > 0 && (
             <span
-              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              className="text-xs font-bold px-1.5 py-0.5 rounded-full"
               style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}
             >
               {data?.pendentesDia}
@@ -144,16 +139,13 @@ export default function DailySalesCards() {
           )}
         </div>
         <p
-          className="text-3xl font-bold mb-1"
+          className="text-xl font-bold"
           style={{
             fontFamily: 'var(--font-geist-mono), monospace',
             color: (data?.pendentesDia ?? 0) > 0 ? '#fbbf24' : 'rgba(255,255,255,0.9)',
           }}
         >
           {formatBRL(data?.valorPendenteDia ?? 0)}
-        </p>
-        <p className="text-xs text-white/40">
-          PIX não pagos e cartões recusados
         </p>
       </GlowCard>
 
