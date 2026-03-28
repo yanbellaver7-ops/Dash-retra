@@ -10,8 +10,17 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
-    const paytToken = request.headers.get('x-payt-token')
-    if (paytToken !== process.env.PAYT_WEBHOOK_SECRET) {
+    // Aceita o token em qualquer um dos headers comuns
+    const token =
+      request.headers.get('x-payt-token') ||
+      request.headers.get('authorization')?.replace('Bearer ', '') ||
+      request.headers.get('x-token') ||
+      request.headers.get('x-webhook-token') ||
+      request.headers.get('x-hub-signature')
+
+    if (token !== process.env.PAYT_WEBHOOK_SECRET) {
+      console.log('Token recebido:', token)
+      console.log('Token esperado:', process.env.PAYT_WEBHOOK_SECRET)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
