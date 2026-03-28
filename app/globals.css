@@ -17,25 +17,24 @@
   --background: #ede9f8;
 }
 
-/* Navbar: fundo roxo suave, texto roxo, logo roxo */
+/* Navbar: gradiente roxo, texto e logo brancos */
 .light-mode nav {
-  background: rgba(124,58,237,0.12) !important;
-  border-color: rgba(124,58,237,0.2) !important;
+  background: linear-gradient(90deg, #7C3AED, #A855F7) !important;
+  border-color: rgba(124,58,237,0.3) !important;
 }
 
 .light-mode nav a,
 .light-mode nav button {
-  color: rgba(124,58,237,0.6) !important;
+  color: rgba(255,255,255,0.7) !important;
 }
 
-.light-mode nav a[style*="rgba(255,255,255,0.08)"],
 .light-mode nav a:hover {
-  color: #7C3AED !important;
+  color: #ffffff !important;
 }
 
-/* Logo roxo */
+/* Logo branco */
 .light-mode nav img {
-  filter: brightness(0) saturate(100%) invert(27%) sepia(90%) saturate(1200%) hue-rotate(255deg) brightness(90%) contrast(110%) !important;
+  filter: brightness(0) invert(1) !important;
   mix-blend-mode: normal !important;
 }
 
