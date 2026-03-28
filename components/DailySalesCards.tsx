@@ -1,0 +1,162 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
+import { GlowCard } from '@/components/ui/spotlight-card'
+import { formatBRL } from '@/lib/utils'
+
+interface DailyData {
+  vendasDia: number
+  receitaDia: number
+  mediaDiaria: number
+  pendentesDia: number
+  valorPendenteDia: number
+}
+
+function getStartOfDay() {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  return d.toISOString()
+}
+
+function getEndOfDay() {
+  const d = new Date()
+  d.setHours(23, 59, 59, 999)
+  return d.toISOString()
+}
+
+export default function DailySalesCards() {
+  const [data, setData] = useState<DailyData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    async function fetchData() {
+      const startOfDay = getStartOfDay()
+      const endOfDay = getEndOfDay()
+
+      // Vendas aprovadas do dia
+      const { data: vendasHoje } = await supabase
+        .from('vendas')
+        .select('valor, status')
+        .gte('created_at', startOfDay)
+        .lte('created_at', endOfDay)
+        .in('status', ['paid', 'approved'])
+
+      // Pendentes do dia (pix não pago + cartão recusado)
+      const { data: pendentesHoje } = await supabase
+        .from('vendas')
+        .select('valor, status')
+        .gte('created_at', startOfDay)
+        .lte('created_at', endOfDay)
+        .in('status', ['pending', 'cancelled', 'refused', 'chargeback'])
+
+      // Todas as vendas aprovadas (para média diária)
+      const { data: todasVendas } = await supabase
+        .from('vendas')
+        .select('valor, created_at')
+        .in('status', ['paid', 'approved'])
+
+      // Calcula média diária
+      let mediaDiaria = 0
+      if (todasVendas && todasVendas.length > 0) {
+        const totalGeral = todasVendas.reduce((sum, v) => sum + (v.valor || 0), 0)
+        const datas = new Set(todasVendas.map(v => v.created_at?.slice(0, 10)))
+        const diasAtivos = Math.max(datas.size, 1)
+        mediaDiaria = totalGeral / diasAtivos
+      }
+
+      const vendasDia = vendasHoje?.length || 0
+      const receitaDia = vendasHoje?.reduce((sum, v) => sum + (v.valor || 0), 0) || 0
+      const pendentesDia = pendentesHoje?.length || 0
+      const valorPendenteDia = pendentesHoje?.reduce((sum, v) => sum + (v.valor || 0), 0) || 0
+
+      setData({ vendasDia, receitaDia, mediaDiaria, pendentesDia, valorPendenteDia })
+      setLoading(false)
+    }
+
+    fetchData()
+
+    // Atualiza a cada 60 segundos
+    const interval = setInterval(fetchData, 60000)
+    return () => clearInterval(interval)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
+          <GlowCard key={i} className="p-5 animate-pulse">
+            <div className="h-3 bg-white/10 rounded w-32 mb-3" />
+            <div className="h-7 bg-white/10 rounded w-24 mb-2" />
+            <div className="h-3 bg-white/10 rounded w-20" />
+          </GlowCard>
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+
+      {/* Vendas do Dia */}
+      <GlowCard className="p-5">
+        <p className="text-sm text-white/50 font-medium mb-3">Vendas do Dia</p>
+        <p
+          className="text-3xl font-bold text-white mb-1"
+          style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+        >
+          {data?.vendasDia ?? 0}
+        </p>
+        <p className="text-xs text-white/40">
+          {formatBRL(data?.receitaDia ?? 0)} em receita hoje
+        </p>
+        <p className="text-xs text-white/25 mt-1">Zera às 23:59</p>
+      </GlowCard>
+
+      {/* Média de Vendas Diária */}
+      <GlowCard className="p-5">
+        <p className="text-sm text-white/50 font-medium mb-3">Média de Vendas Diária</p>
+        <p
+          className="text-3xl font-bold text-white mb-1"
+          style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+        >
+          {formatBRL(data?.mediaDiaria ?? 0)}
+        </p>
+        <p className="text-xs text-white/40">Faturamento médio por dia</p>
+      </GlowCard>
+
+      {/* Vendas Pendentes do Dia */}
+      <GlowCard className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <p className="text-sm text-white/50 font-medium">Pendentes do Dia</p>
+          {(data?.pendentesDia ?? 0) > 0 && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}
+            >
+              {data?.pendentesDia}
+            </span>
+          )}
+        </div>
+        <p
+          className="text-3xl font-bold mb-1"
+          style={{
+            fontFamily: 'var(--font-geist-mono), monospace',
+            color: (data?.pendentesDia ?? 0) > 0 ? '#fbbf24' : 'rgba(255,255,255,0.9)',
+          }}
+        >
+          {formatBRL(data?.valorPendenteDia ?? 0)}
+        </p>
+        <p className="text-xs text-white/40">
+          PIX não pagos e cartões recusados
+        </p>
+      </GlowCard>
+
+    </div>
+  )
+}

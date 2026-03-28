@@ -5,6 +5,7 @@ import RevenueChart from '@/components/RevenueChart'
 import TopProducts from '@/components/TopProducts'
 import MonthlyRevenue from '@/components/MonthlyRevenue'
 import StatesSales from '@/components/StatesSales'
+import DailySalesCards from '@/components/DailySalesCards'
 import { mockKPIs, mockTransactions, mockStatesSales } from '@/lib/mock-data'
 
 export default function DashboardPage() {
@@ -39,6 +40,9 @@ export default function DashboardPage() {
 
         {/* RevenueChart — col 1 */}
         <RevenueChart />
+
+        {/* Daily Sales Cards — col 1 */}
+        <DailySalesCards />
 
         {/* TopProducts — col 1 */}
         <TopProducts />
