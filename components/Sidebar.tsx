@@ -1,22 +1,27 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import Link from 'next/link'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, LayoutDashboard, ShoppingCart, Package, Users, BarChart2, Settings } from 'lucide-react'
 import { useTheme } from '@/lib/theme-context'
+import { MenuBar } from '@/components/ui/glow-menu'
+
+const PURPLE_GRADIENT = 'radial-gradient(circle, rgba(168,85,247,0.25) 0%, rgba(124,58,237,0.10) 50%, rgba(109,40,217,0) 100%)'
+const PURPLE_ICON = 'text-purple-400'
 
 const menuItems = [
-  { label: 'Dashboard', href: '/' },
-  { label: 'Vendas', href: '/vendas' },
-  { label: 'Estoque', href: '/estoque' },
-  { label: 'Clientes', href: '#' },
-  { label: 'Relatórios', href: '#' },
-  { label: 'Configurações', href: '#' },
-] as const
+  { icon: LayoutDashboard, label: 'Dashboard',     href: '/',             gradient: PURPLE_GRADIENT, iconColor: PURPLE_ICON },
+  { icon: ShoppingCart,    label: 'Vendas',         href: '/vendas',       gradient: PURPLE_GRADIENT, iconColor: PURPLE_ICON },
+  { icon: Package,         label: 'Estoque',        href: '/estoque',      gradient: PURPLE_GRADIENT, iconColor: PURPLE_ICON },
+  { icon: Users,           label: 'Clientes',       href: '#',             gradient: PURPLE_GRADIENT, iconColor: PURPLE_ICON },
+  { icon: BarChart2,       label: 'Relatórios',     href: '#',             gradient: PURPLE_GRADIENT, iconColor: PURPLE_ICON },
+  { icon: Settings,        label: 'Configurações',  href: '#',             gradient: PURPLE_GRADIENT, iconColor: PURPLE_ICON },
+]
 
 export default function Sidebar() {
   const pathname = usePathname()
   const { dark, setDark } = useTheme()
+
+  const activeLabel = menuItems.find((m) => m.href === pathname)?.label ?? 'Dashboard'
 
   return (
     <nav
@@ -28,26 +33,17 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className="flex items-center mr-8 ml-6">
-        <img src="/logo-opta.png" alt="Opta" className="h-8 w-auto object-contain" style={{ mixBlendMode: 'lighten', filter: 'brightness(0) invert(1)' }} />
+        <img
+          src="/logo-opta.png"
+          alt="Opta"
+          className="h-8 w-auto object-contain"
+          style={{ mixBlendMode: 'lighten', filter: 'brightness(0) invert(1)' }}
+        />
       </div>
 
-      {/* Menu items */}
-      <div className="flex items-center gap-1 flex-1 justify-center">
-        {menuItems.map(({ label, href }) => {
-          const active = pathname === href
-          return (
-            <Link
-              key={label}
-              href={href}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                active ? 'text-white' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
-              }`}
-              style={active ? { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' } : {}}
-            >
-              {label}
-            </Link>
-          )
-        })}
+      {/* Menu */}
+      <div className="flex-1 flex justify-center">
+        <MenuBar items={menuItems} activeItem={activeLabel} />
       </div>
 
       {/* Theme toggle */}
