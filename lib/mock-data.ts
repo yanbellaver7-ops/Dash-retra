@@ -44,7 +44,7 @@ export const mockWeeklyData = [
   { day: 'Dom', receita: 0, pedidos: 0 },
 ]
 
-export const mockTransactions: never[] = []
+export const mockTransactions: { nome: string; valor: number; change: number; positive: boolean }[] = []
 
 export const mockStatesSales = [
   { uf: 'SP', nome: 'São Paulo', valor: 0, percentual: 0, color: '#7C3AED' },
@@ -55,4 +55,4 @@ export const mockStatesSales = [
   { uf: 'PR', nome: 'Paraná', valor: 0, percentual: 0, color: '#C084FC' },
 ]
 
-export const mockTopProducts: never[] = []
+export const mockTopProducts: { nome: string; periodo: string; valor: number; badge: number; positive: boolean }[] = []
