@@ -17,31 +17,50 @@
   --background: #ede9f8;
 }
 
+/* Navbar: fundo roxo suave, texto roxo, logo roxo */
 .light-mode nav {
-  background: rgba(124,58,237,0.15) !important;
+  background: rgba(124,58,237,0.12) !important;
   border-color: rgba(124,58,237,0.2) !important;
+}
+
+.light-mode nav a,
+.light-mode nav button {
+  color: rgba(124,58,237,0.6) !important;
+}
+
+.light-mode nav a[style*="rgba(255,255,255,0.08)"],
+.light-mode nav a:hover {
+  color: #7C3AED !important;
+}
+
+/* Logo roxo */
+.light-mode nav img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(90%) saturate(1200%) hue-rotate(255deg) brightness(90%) contrast(110%) !important;
+  mix-blend-mode: normal !important;
 }
 
 .light-mode header {
   border-color: rgba(124,58,237,0.15) !important;
 }
 
+/* Cards com gradiente roxo e todo texto branco */
 .light-mode [data-glow] {
   background: linear-gradient(135deg, #7C3AED, #A855F7) !important;
   border-color: rgba(168,85,247,0.4) !important;
   color: #ffffff !important;
 }
 
-.light-mode .text-white {
+.light-mode [data-glow] * {
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
-.light-mode .text-white\/50,
-.light-mode .text-white\/40,
-.light-mode .text-white\/30,
-.light-mode .text-white\/70,
-.light-mode .text-white\/80 {
-  color: rgba(255,255,255,0.7) !important;
+.light-mode [data-glow] .gradient-purple-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
 }
 
 .light-mode input {
