@@ -12,32 +12,28 @@
   --text-muted: rgba(255,255,255,0.5);
 }
 
+/* ── LIGHT MODE ── */
 .light-mode {
-  --background: #f0f0f5;
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --text: #111111;
-  --text-muted: rgba(0,0,0,0.5);
-}
-
-.light-mode .card,
-.light-mode [data-glow] {
-  background: rgba(255,255,255,0.85) !important;
-  border-color: rgba(0,0,0,0.08) !important;
-  color: #111111 !important;
+  --background: #ede9f8;
 }
 
 .light-mode nav {
-  background: rgba(255,255,255,0.8) !important;
-  border-color: rgba(0,0,0,0.08) !important;
+  background: rgba(124,58,237,0.15) !important;
+  border-color: rgba(124,58,237,0.2) !important;
 }
 
 .light-mode header {
-  border-color: rgba(0,0,0,0.08) !important;
+  border-color: rgba(124,58,237,0.15) !important;
+}
+
+.light-mode [data-glow] {
+  background: linear-gradient(135deg, #7C3AED, #A855F7) !important;
+  border-color: rgba(168,85,247,0.4) !important;
+  color: #ffffff !important;
 }
 
 .light-mode .text-white {
-  color: #111111 !important;
+  color: #ffffff !important;
 }
 
 .light-mode .text-white\/50,
@@ -45,17 +41,18 @@
 .light-mode .text-white\/30,
 .light-mode .text-white\/70,
 .light-mode .text-white\/80 {
-  color: rgba(0,0,0,0.5) !important;
+  color: rgba(255,255,255,0.7) !important;
 }
 
 .light-mode input {
-  color: #111111 !important;
+  color: #ffffff !important;
 }
 
 .light-mode input::placeholder {
-  color: rgba(0,0,0,0.3) !important;
+  color: rgba(255,255,255,0.4) !important;
 }
 
+/* ── GLOBAL ── */
 * {
   box-sizing: border-box;
   padding: 0;

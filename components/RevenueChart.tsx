@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTheme } from '@/lib/theme-context'
 import {
   LineChart,
   Line,
@@ -45,6 +46,7 @@ function CustomTooltip({ active, payload, label }: any) {
 
 export default function RevenueChart() {
   const [period, setPeriod] = useState('Mensal')
+  const { dark } = useTheme()
   const data = period === 'Semanal' ? mockWeeklyData : mockChartData
   const xKey = period === 'Semanal' ? 'day' : 'month'
 
@@ -109,19 +111,19 @@ export default function RevenueChart() {
           <Line
             type="monotone"
             dataKey="receita"
-            stroke="rgba(255,255,255,0.9)"
+            stroke={dark ? 'rgba(255,255,255,0.9)' : '#7C3AED'}
             strokeWidth={2.5}
             dot={false}
-            activeDot={{ r: 5, fill: 'white', strokeWidth: 0 }}
+            activeDot={{ r: 5, fill: dark ? 'white' : '#A855F7', strokeWidth: 0 }}
           />
           <Line
             type="monotone"
             dataKey="pedidos"
-            stroke="rgba(255,255,255,0.3)"
+            stroke={dark ? 'rgba(255,255,255,0.3)' : 'rgba(168,85,247,0.4)'}
             strokeWidth={2}
             dot={false}
             strokeDasharray="4 4"
-            activeDot={{ r: 4, fill: 'rgba(255,255,255,0.6)', strokeWidth: 0 }}
+            activeDot={{ r: 4, fill: dark ? 'rgba(255,255,255,0.6)' : 'rgba(168,85,247,0.7)', strokeWidth: 0 }}
           />
         </LineChart>
       </ResponsiveContainer>

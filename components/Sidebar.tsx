@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { Eye, EyeOff } from 'lucide-react'
+import { useTheme } from '@/lib/theme-context'
 
 const menuItems = [
   { label: 'Dashboard', href: '/' },
@@ -14,6 +16,7 @@ const menuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const { dark, setDark } = useTheme()
 
   return (
     <nav
@@ -51,6 +54,16 @@ export default function Sidebar() {
           )
         })}
       </div>
+
+      {/* Theme toggle */}
+      <button
+        onClick={() => setDark(!dark)}
+        className="flex items-center justify-center w-9 h-9 rounded-lg transition-all hover:bg-white/10"
+        style={{ color: 'rgba(255,255,255,0.5)' }}
+        title={dark ? 'Modo claro' : 'Modo escuro'}
+      >
+        {dark ? <Eye size={18} /> : <EyeOff size={18} />}
+      </button>
     </nav>
   )
 }
