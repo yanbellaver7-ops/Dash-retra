@@ -7,12 +7,12 @@ import { useTheme } from '@/lib/theme-context'
 
 const menuItems = [
   { label: 'Dashboard', href: '/' },
-  { label: 'Vendas', href: '/vendas', badge: 4 },
+  { label: 'Vendas', href: '/vendas' },
   { label: 'Produtos', href: '#' },
   { label: 'Clientes', href: '#' },
   { label: 'Relatórios', href: '#' },
   { label: 'Configurações', href: '#' },
-]
+] as const
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -33,23 +33,18 @@ export default function Sidebar() {
 
       {/* Menu items */}
       <div className="flex items-center gap-1 flex-1 justify-center">
-        {menuItems.map(({ label, href, badge }) => {
+        {menuItems.map(({ label, href }) => {
           const active = pathname === href
           return (
             <Link
               key={label}
               href={href}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                 active ? 'text-white' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
               }`}
               style={active ? { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' } : {}}
             >
               {label}
-              {badge && (
-                <span className="text-xs bg-white/15 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                  {badge}
-                </span>
-              )}
             </Link>
           )
         })}
