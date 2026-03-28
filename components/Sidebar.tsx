@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { useTheme } from '@/lib/theme-context'
 
 const menuItems = [
   { label: 'Dashboard', href: '/' },
@@ -14,7 +13,6 @@ const menuItems = [
 ]
 
 export default function Sidebar() {
-  const { dark, setDark } = useTheme()
   const pathname = usePathname()
 
   return (
@@ -52,38 +50,6 @@ export default function Sidebar() {
             </Link>
           )
         })}
-      </div>
-
-      {/* Right side: theme toggle + CTA */}
-      <div className="flex items-center gap-3">
-        <div
-          className="flex items-center rounded-lg p-0.5"
-          style={{ background: 'rgba(255,255,255,0.06)' }}
-        >
-          <button
-            onClick={() => setDark(false)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-              !dark ? 'bg-white text-gray-900' : 'text-white/40 hover:text-white/70'
-            }`}
-          >
-            Light
-          </button>
-          <button
-            onClick={() => setDark(true)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-              dark ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/70'
-            }`}
-          >
-            Dark
-          </button>
-        </div>
-
-        <button
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:opacity-80"
-          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'white' }}
-        >
-          ✦ Powered by IA
-        </button>
       </div>
     </nav>
   )
