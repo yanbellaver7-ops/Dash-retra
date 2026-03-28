@@ -3,12 +3,12 @@
 import { useState } from 'react'
 
 const menuItems = [
-  { label: 'Dashboard', active: true },
-  { label: 'Vendas', badge: 4 },
-  { label: 'Produtos' },
-  { label: 'Clientes' },
-  { label: 'Relatórios' },
-  { label: 'Configurações' },
+  { label: 'Dashboard', href: '/', active: true },
+  { label: 'Vendas', href: '/vendas', badge: 4 },
+  { label: 'Produtos', href: '#' },
+  { label: 'Clientes', href: '#' },
+  { label: 'Relatórios', href: '#' },
+  { label: 'Configurações', href: '#' },
 ]
 
 export default function Sidebar() {
@@ -29,9 +29,10 @@ export default function Sidebar() {
 
       {/* Menu items */}
       <div className="flex items-center gap-1 flex-1 justify-center">
-        {menuItems.map(({ label, active, badge }) => (
-          <button
+        {menuItems.map(({ label, href, active, badge }) => (
+          <a
             key={label}
+            href={href}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
               active ? 'text-white' : 'text-white/40 hover:text-white/70 hover:bg-white/5'
             }`}
@@ -43,7 +44,7 @@ export default function Sidebar() {
                 {badge}
               </span>
             )}
-          </button>
+          </a>
         ))}
       </div>
 
