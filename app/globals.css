@@ -3,11 +3,57 @@
 @tailwind utilities;
 
 :root {
-  --background: #0D0B1A;
+  --background: #000000;
   --card-bg: rgba(255, 255, 255, 0.04);
   --card-border: rgba(255, 255, 255, 0.08);
   --primary: #7C3AED;
   --primary-light: #A855F7;
+  --text: #ffffff;
+  --text-muted: rgba(255,255,255,0.5);
+}
+
+.light-mode {
+  --background: #f0f0f5;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --text: #111111;
+  --text-muted: rgba(0,0,0,0.5);
+}
+
+.light-mode .card,
+.light-mode [data-glow] {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  color: #111111 !important;
+}
+
+.light-mode nav {
+  background: rgba(255,255,255,0.8) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+.light-mode header {
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+.light-mode .text-white {
+  color: #111111 !important;
+}
+
+.light-mode .text-white\/50,
+.light-mode .text-white\/40,
+.light-mode .text-white\/30,
+.light-mode .text-white\/70,
+.light-mode .text-white\/80 {
+  color: rgba(0,0,0,0.5) !important;
+}
+
+.light-mode input {
+  color: #111111 !important;
+}
+
+.light-mode input::placeholder {
+  color: rgba(0,0,0,0.3) !important;
 }
 
 * {

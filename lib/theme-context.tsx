@@ -15,8 +15,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ThemeContext.Provider value={{ dark, setDark }}>
       <div
+        className={dark ? '' : 'light-mode'}
         style={{
-          background: dark ? '#000000' : '#f5f5f5',
+          background: dark ? '#000000' : '#f0f0f5',
           color: dark ? '#ffffff' : '#111111',
           minHeight: '100vh',
           transition: 'background 0.3s, color 0.3s',
