@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { useTheme } from '@/lib/theme-context'
 
 const menuItems = [
   { label: 'Dashboard', href: '/' },
@@ -14,7 +14,7 @@ const menuItems = [
 ]
 
 export default function Sidebar() {
-  const [dark, setDark] = useState(true)
+  const { dark, setDark } = useTheme()
   const pathname = usePathname()
 
   return (
