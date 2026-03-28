@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, ReactNode } from 'react'
+import { useTheme } from '@/lib/theme-context'
 
 interface GlowCardProps {
   children: ReactNode
@@ -73,6 +74,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
 }) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
+  const { dark } = useTheme()
 
   useEffect(() => {
     const syncPointer = (e: PointerEvent) => {
@@ -90,30 +92,37 @@ const GlowCard: React.FC<GlowCardProps> = ({
 
   const { base } = glowColorMap[glowColor]
 
-  const inlineStyles = {
-    '--base': base,
-    '--radius': '16',
-    '--border': '2',
-    '--backdrop': 'rgba(255,255,255,0.04)',
-    '--backup-border': 'rgba(255,255,255,0.08)',
-    '--size': '220',
-    '--outer': '1',
-    '--border-size': 'calc(var(--border, 2) * 1px)',
-    '--spotlight-size': 'calc(var(--size, 150) * 1px)',
-    '--hue': base,
-    backgroundImage: `radial-gradient(
-      var(--spotlight-size) var(--spotlight-size) at
-      calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
-      hsl(${base} 80% 60% / 0.06), transparent
-    )`,
-    backgroundColor: 'var(--backdrop, transparent)',
-    backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
-    backgroundPosition: '50% 50%',
-    backgroundAttachment: 'fixed',
-    border: 'var(--border-size) solid var(--backup-border)',
-    position: 'relative' as const,
-    touchAction: 'none' as const,
-  } as React.CSSProperties
+  const inlineStyles: React.CSSProperties = dark
+    ? {
+        '--base': base,
+        '--radius': '16',
+        '--border': '2',
+        '--backdrop': 'rgba(255,255,255,0.04)',
+        '--backup-border': 'rgba(255,255,255,0.08)',
+        '--size': '220',
+        '--outer': '1',
+        '--border-size': 'calc(var(--border, 2) * 1px)',
+        '--spotlight-size': 'calc(var(--size, 150) * 1px)',
+        '--hue': base,
+        backgroundImage: `radial-gradient(
+          var(--spotlight-size) var(--spotlight-size) at
+          calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+          hsl(${base} 80% 60% / 0.06), transparent
+        )`,
+        backgroundColor: 'var(--backdrop, transparent)',
+        backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
+        backgroundPosition: '50% 50%',
+        backgroundAttachment: 'fixed',
+        border: 'var(--border-size) solid var(--backup-border)',
+        position: 'relative',
+        touchAction: 'none',
+      } as React.CSSProperties
+    : {
+        background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+        border: '1px solid rgba(168,85,247,0.4)',
+        position: 'relative',
+        touchAction: 'none',
+      }
 
   return (
     <>

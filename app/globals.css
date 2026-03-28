@@ -43,14 +43,14 @@
   border-color: rgba(124,58,237,0.15) !important;
 }
 
-/* Cards com gradiente roxo e todo texto branco */
+/* Cards: todo texto branco */
 .light-mode [data-glow] {
-  background: linear-gradient(135deg, #7C3AED, #A855F7) !important;
-  border-color: rgba(168,85,247,0.4) !important;
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
-.light-mode [data-glow] * {
+.light-mode [data-glow] p,
+.light-mode [data-glow] span,
+.light-mode [data-glow] div {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
@@ -60,7 +60,6 @@
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
   -webkit-text-fill-color: #ffffff !important;
-  color: #ffffff !important;
 }
 
 .light-mode input {
