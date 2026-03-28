@@ -9,7 +9,7 @@ import { mockKPIs, mockTransactions, mockStatesSales } from '@/lib/mock-data'
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col min-h-screen" style={{ background: '#000000' }}>
+    <div className="flex flex-col min-h-screen">
       <Sidebar />
       <Header />
 

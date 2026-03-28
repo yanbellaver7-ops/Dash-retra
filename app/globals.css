@@ -17,8 +17,7 @@
 }
 
 html, body {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: transparent;
   font-family: var(--font-geist-sans), sans-serif;
 }
 

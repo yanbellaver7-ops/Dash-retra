@@ -68,7 +68,7 @@ export default function VendasPage() {
   const paginatedVendas = vendas.slice((page - 1) * perPage, page * perPage)
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ background: '#000000' }}>
+    <div className="flex flex-col min-h-screen">
       <Sidebar />
       <Header />
 
