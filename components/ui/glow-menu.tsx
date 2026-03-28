@@ -62,7 +62,7 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
             const isActive = item.label === activeItem
 
             return (
-              <motion.li key={item.label} className="relative">
+              <li key={item.label} className="relative">
                 <Link href={item.href} className="block w-full">
                   <motion.div
                     className="block rounded-xl overflow-visible group relative"
@@ -121,7 +121,7 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
                     </motion.div>
                   </motion.div>
                 </Link>
-              </motion.li>
+              </li>
             )
           })}
         </ul>
