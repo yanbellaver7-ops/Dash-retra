@@ -25,18 +25,20 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Card produto — col 2, span 2 linhas (KPIs + Gráfico) */}
+        {/* Card produto — col 2 */}
         <div
-          className="row-span-2 rounded-2xl flex items-center justify-center p-4 group"
+          className="rounded-2xl flex items-center justify-center p-4 group"
           style={{
             border: '1px solid rgba(255,255,255,0.08)',
             background: 'rgba(255,255,255,0.03)',
+            alignSelf: 'start',
+            maxHeight: '480px',
           }}
         >
           <img
             src="/RETRA-MAX_CAPS_MOCKUP.png"
             alt="Retra Max"
-            className="w-full max-h-[480px] object-contain transition-transform duration-700 ease-in-out group-hover:rotate-12 group-hover:scale-110"
+            className="w-full max-h-[420px] object-contain transition-transform duration-700 ease-in-out group-hover:rotate-12 group-hover:scale-110"
           />
         </div>
 
