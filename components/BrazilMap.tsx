@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
+import { useEffect, useState, useRef } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { GlowCard } from '@/components/ui/spotlight-card'
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 
-const BrazilMapInner = dynamic(() => import('@/components/BrazilMapInner'), { ssr: false })
+const GEO_URL = '/brazil-states.geojson'
 
 interface StateData {
   sigla: string
@@ -13,12 +13,19 @@ interface StateData {
   percent: number
 }
 
+function interpolateColor(percent: number): string {
+  const opacity = 0.15 + (percent / 100) * 0.75
+  return `rgba(168, 85, 247, ${opacity.toFixed(2)})`
+}
+
 export default function BrazilMap() {
   const [stateData, setStateData] = useState<Record<string, StateData>>({})
   const [tooltip, setTooltip] = useState<{ name: string; sigla: string; count: number; percent: number } | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -30,7 +37,7 @@ export default function BrazilMap() {
         .select('estado')
         .in('status', ['paid', 'approved'])
 
-      if (!data || data.length === 0) { setLoading(false); return }
+      if (!data || data.length === 0) return
 
       const total = data.length
       const counts: Record<string, number> = {}
@@ -44,7 +51,6 @@ export default function BrazilMap() {
       })
 
       setStateData(result)
-      setLoading(false)
     }
 
     fetchSalesByState()
@@ -54,7 +60,7 @@ export default function BrazilMap() {
     <GlowCard className="p-5">
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm text-white/50 font-medium">Vendas por Estado</p>
-        {!loading && Object.keys(stateData).length > 0 && (
+        {Object.keys(stateData).length > 0 && (
           <p className="text-xs text-white/30">
             {Object.keys(stateData).length} estado{Object.keys(stateData).length !== 1 ? 's' : ''}
           </p>
@@ -62,7 +68,6 @@ export default function BrazilMap() {
       </div>
 
       <div className="flex gap-4 items-start">
-        {/* Mapa */}
         <div className="flex-1 relative" style={{ minHeight: 340 }}>
           {tooltip && (
             <div
@@ -80,11 +85,50 @@ export default function BrazilMap() {
             </div>
           )}
 
-          <BrazilMapInner stateData={stateData} onHover={setTooltip} />
+          {mounted && (
+            <ComposableMap
+              projection="geoMercator"
+              projectionConfig={{ scale: 750, center: [-54, -15] }}
+              style={{ width: '100%', height: '340px' }}
+            >
+              <Geographies geography={GEO_URL}>
+                {({ geographies }) =>
+                  geographies.map((geo) => {
+                    const sigla = geo.properties.sigla?.toUpperCase() || ''
+                    const data = stateData[sigla]
+                    const fill = data ? interpolateColor(data.percent) : 'rgba(255,255,255,0.08)'
+
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill={fill}
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeWidth={0.6}
+                        style={{
+                          default: { outline: 'none', transition: 'fill 0.2s' },
+                          hover: { outline: 'none', fill: 'rgba(168,85,247,0.6)', cursor: 'pointer' },
+                          pressed: { outline: 'none' },
+                        }}
+                        onMouseEnter={() =>
+                          setTooltip({
+                            name: geo.properties.name || sigla,
+                            sigla,
+                            count: data?.count || 0,
+                            percent: data?.percent || 0,
+                          })
+                        }
+                        onMouseLeave={() => setTooltip(null)}
+                      />
+                    )
+                  })
+                }
+              </Geographies>
+            </ComposableMap>
+          )}
         </div>
 
-        {/* Ranking lateral */}
-        {!loading && Object.keys(stateData).length > 0 && (
+        {Object.keys(stateData).length > 0 && (
           <div className="flex flex-col gap-1.5 min-w-[120px]">
             <p className="text-xs text-white/30 mb-1 uppercase tracking-wider">Top estados</p>
             {Object.values(stateData)
@@ -103,10 +147,6 @@ export default function BrazilMap() {
                 </div>
               ))}
           </div>
-        )}
-
-        {!loading && Object.keys(stateData).length === 0 && (
-          <p className="text-xs text-white/30 py-8 text-center w-full">Nenhuma venda registrada ainda.</p>
         )}
       </div>
     </GlowCard>
