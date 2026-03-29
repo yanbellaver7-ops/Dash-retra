@@ -69,7 +69,7 @@ export default function BrazilMap() {
 
       <div className="flex gap-3 items-start">
         {/* Mapa */}
-        <div className="relative" style={{ width: 200, minHeight: 220, flexShrink: 0 }}>
+        <div className="relative" style={{ width: 320, minHeight: 340, flexShrink: 0 }}>
           {tooltip && (
             <div
               className="absolute top-1 left-1 z-20 px-2 py-1.5 rounded-lg text-xs pointer-events-none"
@@ -85,8 +85,8 @@ export default function BrazilMap() {
           {mounted && (
             <ComposableMap
               projection="geoMercator"
-              projectionConfig={{ scale: 480, center: [-54, -15] }}
-              style={{ width: '100%', height: '220px' }}
+              projectionConfig={{ scale: 750, center: [-54, -15] }}
+              style={{ width: '100%', height: '340px' }}
             >
               <Geographies geography={GEO_URL}>
                 {({ geographies }) =>
