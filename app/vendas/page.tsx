@@ -157,18 +157,10 @@ export default function VendasPage() {
                   </span>
 
                   {/* Cliente / Produto */}
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white shrink-0"
-                      style={{ background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.3)' }}
-                    >
-                      {getInitials(venda.cliente_nome || '')}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white leading-tight">{venda.cliente_nome || '—'}</p>
-                      <p className="text-xs text-white/40 mt-0.5">{venda.cliente_email || '—'}</p>
-                      <p className="text-xs text-white/30 mt-0.5">{venda.produto_nome || '—'}</p>
-                    </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white leading-tight">{venda.cliente_nome || '—'}</p>
+                    <p className="text-xs text-white/40 mt-0.5">{venda.cliente_email || '—'}</p>
+                    <p className="text-xs text-white/30 mt-0.5">{venda.produto_nome || '—'}</p>
                   </div>
 
                   {/* Data */}
