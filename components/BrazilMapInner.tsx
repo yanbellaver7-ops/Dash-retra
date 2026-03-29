@@ -2,7 +2,7 @@
 
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 
-const GEO_URL = '/brazil-states.geojson'
+const GEO_URL = 'https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson'
 
 interface StateData {
   sigla: string
@@ -24,26 +24,26 @@ export default function BrazilMapInner({ stateData, onHover }: Props) {
   return (
     <ComposableMap
       projection="geoMercator"
-      projectionConfig={{ scale: 750, center: [-54, -15] }}
-      style={{ width: '100%', height: '340px' }}
+      projectionConfig={{ scale: 680, center: [-54, -15] }}
+      style={{ width: '100%', height: '280px' }}
     >
       <Geographies geography={GEO_URL}>
         {({ geographies }) =>
           geographies.map((geo) => {
             const sigla = geo.properties.sigla?.toUpperCase() || ''
             const data = stateData[sigla]
-            const fill = data ? interpolateColor(data.percent) : 'rgba(255,255,255,0.08)'
+            const fill = data ? interpolateColor(data.percent) : 'rgba(255,255,255,0.05)'
 
             return (
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
                 fill={fill}
-                stroke="rgba(255,255,255,0.15)"
-                strokeWidth={0.6}
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth={0.5}
                 style={{
                   default: { outline: 'none', transition: 'fill 0.2s' },
-                  hover: { outline: 'none', fill: 'rgba(168,85,247,0.6)', cursor: 'pointer' },
+                  hover: { outline: 'none', fill: 'rgba(168,85,247,0.7)', cursor: 'pointer' },
                   pressed: { outline: 'none' },
                 }}
                 onMouseEnter={() =>

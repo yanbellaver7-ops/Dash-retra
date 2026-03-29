@@ -3,4 +3,3 @@ node_modules/
 .env.local
 *.mov
 *.mp4
-.vercel
