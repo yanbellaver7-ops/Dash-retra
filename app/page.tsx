@@ -7,6 +7,7 @@ import MonthlyRevenue from '@/components/MonthlyRevenue'
 import StatesSales from '@/components/StatesSales'
 import DailySalesCards from '@/components/DailySalesCards'
 import BrazilMap from '@/components/BrazilMap'
+import StockCard from '@/components/StockCard'
 import { mockKPIs, mockTransactions, mockStatesSales } from '@/lib/mock-data'
 
 export default function DashboardPage() {
@@ -45,8 +46,13 @@ export default function DashboardPage() {
         {/* Daily Sales Cards — col 1 */}
         <DailySalesCards />
 
-        {/* Brazil Map — col 1 */}
-        <BrazilMap />
+        {/* Brazil Map + Stock Card — col 1 */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-2">
+            <BrazilMap />
+          </div>
+          <StockCard />
+        </div>
 
         {/* TopProducts — col 1 */}
         <TopProducts />

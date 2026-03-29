@@ -67,29 +67,26 @@ export default function BrazilMap() {
         )}
       </div>
 
-      <div className="flex gap-4 items-start">
-        <div className="flex-1 relative" style={{ minHeight: 340 }}>
+      <div className="flex gap-3 items-start">
+        {/* Mapa */}
+        <div className="relative" style={{ width: 200, minHeight: 220, flexShrink: 0 }}>
           {tooltip && (
             <div
-              className="absolute top-2 left-2 z-20 px-3 py-2 rounded-xl text-xs pointer-events-none"
+              className="absolute top-1 left-1 z-20 px-2 py-1.5 rounded-lg text-xs pointer-events-none"
               style={{
                 background: 'rgba(13,11,26,0.95)',
                 border: '1px solid rgba(168,85,247,0.3)',
-                backdropFilter: 'blur(8px)',
               }}
             >
-              <p className="text-white font-semibold">{tooltip.name} ({tooltip.sigla})</p>
-              <p style={{ color: '#A855F7' }}>
-                {tooltip.count} venda{tooltip.count !== 1 ? 's' : ''} — {tooltip.percent}%
-              </p>
+              <p className="text-white font-semibold">{tooltip.sigla}</p>
+              <p style={{ color: '#A855F7' }}>{tooltip.percent}%</p>
             </div>
           )}
-
           {mounted && (
             <ComposableMap
               projection="geoMercator"
-              projectionConfig={{ scale: 750, center: [-54, -15] }}
-              style={{ width: '100%', height: '340px' }}
+              projectionConfig={{ scale: 480, center: [-54, -15] }}
+              style={{ width: '100%', height: '220px' }}
             >
               <Geographies geography={GEO_URL}>
                 {({ geographies }) =>
@@ -97,7 +94,6 @@ export default function BrazilMap() {
                     const sigla = geo.properties.sigla?.toUpperCase() || ''
                     const data = stateData[sigla]
                     const fill = data ? interpolateColor(data.percent) : 'rgba(255,255,255,0.08)'
-
                     return (
                       <Geography
                         key={geo.rsmKey}
@@ -110,14 +106,7 @@ export default function BrazilMap() {
                           hover: { outline: 'none', fill: 'rgba(168,85,247,0.6)', cursor: 'pointer' },
                           pressed: { outline: 'none' },
                         }}
-                        onMouseEnter={() =>
-                          setTooltip({
-                            name: geo.properties.name || sigla,
-                            sigla,
-                            count: data?.count || 0,
-                            percent: data?.percent || 0,
-                          })
-                        }
+                        onMouseEnter={() => setTooltip({ name: geo.properties.name || sigla, sigla, count: data?.count || 0, percent: data?.percent || 0 })}
                         onMouseLeave={() => setTooltip(null)}
                       />
                     )
@@ -128,26 +117,30 @@ export default function BrazilMap() {
           )}
         </div>
 
-        {Object.keys(stateData).length > 0 && (
-          <div className="flex flex-col gap-1.5 min-w-[120px]">
-            <p className="text-xs text-white/30 mb-1 uppercase tracking-wider">Top estados</p>
-            {Object.values(stateData)
+        {/* Top 5 estados */}
+        <div className="flex flex-col gap-2 flex-1">
+          <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Top 5 estados</p>
+          {Object.values(stateData).length === 0 ? (
+            <p className="text-xs text-white/20">Sem dados ainda.</p>
+          ) : (
+            Object.values(stateData)
               .sort((a, b) => b.count - a.count)
-              .slice(0, 8)
-              .map((s) => (
+              .slice(0, 5)
+              .map((s, i) => (
                 <div key={s.sigla} className="flex items-center gap-2">
-                  <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  <span className="text-xs text-white/20 w-3">{i + 1}</span>
+                  <span className="text-xs text-white/70 font-semibold w-6">{s.sigla}</span>
+                  <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
                     <div
                       className="h-full rounded-full"
                       style={{ width: `${s.percent}%`, background: 'linear-gradient(90deg, #7C3AED, #A855F7)' }}
                     />
                   </div>
-                  <span className="text-xs text-white/60 font-medium w-7">{s.sigla}</span>
-                  <span className="text-xs text-white/40">{s.percent}%</span>
+                  <span className="text-xs text-white/40 w-8 text-right">{s.percent}%</span>
                 </div>
-              ))}
-          </div>
-        )}
+              ))
+          )}
+        </div>
       </div>
     </GlowCard>
   )
