@@ -23,12 +23,14 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Card produto — col 2 */}
+        {/* Card produto — col 2, alinhado com RevenueChart */}
         <div
-          className="row-span-2 rounded-2xl flex items-center justify-center p-4 group"
+          className="rounded-2xl flex items-center justify-center p-4 group"
           style={{
             border: '1px solid rgba(255,255,255,0.08)',
             background: 'rgba(255,255,255,0.03)',
+            gridColumn: '2',
+            gridRow: '2',
             alignSelf: 'start',
           }}
         >
