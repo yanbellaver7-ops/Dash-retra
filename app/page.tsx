@@ -2,7 +2,6 @@ import Sidebar from '@/components/Sidebar'
 import Header from '@/components/Header'
 import KPICard from '@/components/KPICard'
 import RevenueChart from '@/components/RevenueChart'
-import TopProducts from '@/components/TopProducts'
 import MonthlyRevenue from '@/components/MonthlyRevenue'
 import StatesSales from '@/components/StatesSales'
 import DailySalesCards from '@/components/DailySalesCards'
@@ -48,9 +47,6 @@ export default function DashboardPage() {
 
         {/* Brazil Map — col 1 */}
         <BrazilMap />
-
-        {/* TopProducts — col 1 */}
-        <TopProducts />
 
         {/* MonthlyRevenue — col 2, mesma linha do TopProducts */}
         <div style={{ gridColumn: '2', gridRow: '3' }}>
