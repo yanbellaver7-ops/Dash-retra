@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { LucideIcon } from "lucide-react"
@@ -24,23 +25,41 @@ const spring = { type: "spring" as const, stiffness: 100, damping: 20, duration:
 
 export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
   ({ className, items, activeItem }, ref) => {
+    const router = useRouter()
+    const [clicking, setClicking] = useState<string | null>(null)
+
+    function handleClick(e: React.MouseEvent, label: string, href: string) {
+      if (href === '#') return
+      e.preventDefault()
+      setClicking(label)
+      setTimeout(() => {
+        router.push(href)
+        setClicking(null)
+      }, 320)
+    }
+
     return (
       <div ref={ref} className={cn("relative", className)}>
         <ul className="flex items-center gap-1">
           {items.map((item) => {
             const Icon = item.icon
             const isActive = item.label === activeItem
+            const isClicking = clicking === item.label
+            const animState = isClicking ? "hovered" : "idle"
 
             return (
-              <li key={item.label} className="relative">
-                <Link href={item.href} className="block">
+              <li key={item.label}>
+                <a
+                  href={item.href === '#' ? undefined : item.href}
+                  onClick={(e) => handleClick(e, item.label, item.href)}
+                  className="block cursor-pointer"
+                >
                   <motion.div
                     className="relative rounded-xl overflow-visible"
                     style={{ perspective: "600px" }}
-                    whileHover="hovered"
-                    initial="idle"
+                    animate={animState}
                   >
-                    {/* Glow — controlado separadamente via animate */}
+                    {/* Glow — só no item ativo */}
                     <motion.div
                       className="absolute inset-0 pointer-events-none rounded-xl z-0"
                       animate={isActive ? { opacity: 1, scale: 1.8 } : { opacity: 0, scale: 0.8 }}
@@ -82,7 +101,7 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
                       <span className="text-sm font-medium">{item.label}</span>
                     </motion.div>
                   </motion.div>
-                </Link>
+                </a>
               </li>
             )
           })}
