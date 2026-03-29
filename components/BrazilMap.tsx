@@ -63,7 +63,7 @@ export default function BrazilMap() {
 
       <div className="flex gap-4 items-start">
         {/* Mapa */}
-        <div className="flex-1 relative" style={{ minHeight: 280 }}>
+        <div className="flex-1 relative" style={{ minHeight: 340 }}>
           {tooltip && (
             <div
               className="absolute top-2 left-2 z-20 px-3 py-2 rounded-xl text-xs pointer-events-none"
@@ -80,11 +80,7 @@ export default function BrazilMap() {
             </div>
           )}
 
-          {loading ? (
-            <div className="w-full h-[280px] rounded-xl animate-pulse" style={{ background: 'rgba(255,255,255,0.04)' }} />
-          ) : (
-            <BrazilMapInner stateData={stateData} onHover={setTooltip} />
-          )}
+          <BrazilMapInner stateData={stateData} onHover={setTooltip} />
         </div>
 
         {/* Ranking lateral */}
