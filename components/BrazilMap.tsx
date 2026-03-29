@@ -1,22 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { createClient } from '@supabase/supabase-js'
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import { GlowCard } from '@/components/ui/spotlight-card'
 
-const GEO_URL = 'https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson'
+const BrazilMapInner = dynamic(() => import('@/components/BrazilMapInner'), { ssr: false })
 
 interface StateData {
   sigla: string
   count: number
   percent: number
-}
-
-function interpolateColor(percent: number): string {
-  // 0% → escuro, 100% → roxo vibrante
-  const opacity = 0.1 + (percent / 100) * 0.85
-  return `rgba(168, 85, 247, ${opacity.toFixed(2)})`
 }
 
 export default function BrazilMap() {
@@ -36,10 +30,7 @@ export default function BrazilMap() {
         .select('estado')
         .in('status', ['paid', 'approved'])
 
-      if (!data || data.length === 0) {
-        setLoading(false)
-        return
-      }
+      if (!data || data.length === 0) { setLoading(false); return }
 
       const total = data.length
       const counts: Record<string, number> = {}
@@ -83,48 +74,17 @@ export default function BrazilMap() {
               }}
             >
               <p className="text-white font-semibold">{tooltip.name} ({tooltip.sigla})</p>
-              <p style={{ color: '#A855F7' }}>{tooltip.count} venda{tooltip.count !== 1 ? 's' : ''} — {tooltip.percent}%</p>
+              <p style={{ color: '#A855F7' }}>
+                {tooltip.count} venda{tooltip.count !== 1 ? 's' : ''} — {tooltip.percent}%
+              </p>
             </div>
           )}
-          <ComposableMap
-            projection="geoMercator"
-            projectionConfig={{ scale: 680, center: [-54, -15] }}
-            style={{ width: '100%', height: '280px' }}
-          >
-            <Geographies geography={GEO_URL}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const sigla = geo.properties.sigla?.toUpperCase() || ''
-                  const data = stateData[sigla]
-                  const fill = data ? interpolateColor(data.percent) : 'rgba(255,255,255,0.05)'
 
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={fill}
-                      stroke="rgba(255,255,255,0.1)"
-                      strokeWidth={0.5}
-                      style={{
-                        default: { outline: 'none', transition: 'fill 0.2s' },
-                        hover: { outline: 'none', fill: 'rgba(168,85,247,0.7)', cursor: 'pointer' },
-                        pressed: { outline: 'none' },
-                      }}
-                      onMouseEnter={() =>
-                        setTooltip({
-                          name: geo.properties.name || sigla,
-                          sigla,
-                          count: data?.count || 0,
-                          percent: data?.percent || 0,
-                        })
-                      }
-                      onMouseLeave={() => setTooltip(null)}
-                    />
-                  )
-                })
-              }
-            </Geographies>
-          </ComposableMap>
+          {loading ? (
+            <div className="w-full h-[280px] rounded-xl animate-pulse" style={{ background: 'rgba(255,255,255,0.04)' }} />
+          ) : (
+            <BrazilMapInner stateData={stateData} onHover={setTooltip} />
+          )}
         </div>
 
         {/* Ranking lateral */}
@@ -150,9 +110,7 @@ export default function BrazilMap() {
         )}
 
         {!loading && Object.keys(stateData).length === 0 && (
-          <p className="text-xs text-white/30 absolute inset-0 flex items-center justify-center">
-            Nenhuma venda registrada ainda.
-          </p>
+          <p className="text-xs text-white/30 py-8 text-center w-full">Nenhuma venda registrada ainda.</p>
         )}
       </div>
     </GlowCard>
