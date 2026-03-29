@@ -6,6 +6,7 @@ import TopProducts from '@/components/TopProducts'
 import MonthlyRevenue from '@/components/MonthlyRevenue'
 import StatesSales from '@/components/StatesSales'
 import DailySalesCards from '@/components/DailySalesCards'
+import BrazilMap from '@/components/BrazilMap'
 import { mockKPIs, mockTransactions, mockStatesSales } from '@/lib/mock-data'
 
 export default function DashboardPage() {
@@ -43,6 +44,9 @@ export default function DashboardPage() {
 
         {/* Daily Sales Cards — col 1 */}
         <DailySalesCards />
+
+        {/* Brazil Map — col 1 */}
+        <BrazilMap />
 
         {/* TopProducts — col 1 */}
         <TopProducts />
