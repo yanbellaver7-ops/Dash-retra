@@ -2,7 +2,7 @@
 
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 
-const GEO_URL = 'https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson'
+const GEO_URL = '/brazil-states.geojson'
 
 interface StateData {
   sigla: string
