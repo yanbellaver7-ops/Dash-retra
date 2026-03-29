@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
       payt_order_id: body.order_id,
       cliente_nome: body.customer?.name,
       cliente_email: body.customer?.email,
+      cliente_cpf: body.customer?.document || body.customer?.cpf || null,
       valor: body.amount / 100,
       status: body.status,
       produto_nome: body.product?.name,

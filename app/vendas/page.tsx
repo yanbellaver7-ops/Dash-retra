@@ -11,6 +11,7 @@ interface Venda {
   payt_order_id: string
   cliente_nome: string
   cliente_email: string
+  cliente_cpf: string
   valor: number
   status: string
   produto_nome: string
@@ -41,6 +42,7 @@ function getInitials(name: string) {
 export default function VendasPage() {
   const [vendas, setVendas] = useState<Venda[]>([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const perPage = 10
 
@@ -64,8 +66,18 @@ export default function VendasPage() {
     fetchVendas()
   }, [])
 
-  const totalPages = Math.ceil(vendas.length / perPage)
-  const paginatedVendas = vendas.slice((page - 1) * perPage, page * perPage)
+  const filtered = vendas.filter((v) => {
+    if (!search) return true
+    const q = search.toLowerCase().replace(/\D/g, '') || search.toLowerCase()
+    const cpfClean = (v.cliente_cpf || '').replace(/\D/g, '')
+    return (
+      v.cliente_nome?.toLowerCase().includes(search.toLowerCase()) ||
+      cpfClean.includes(q)
+    )
+  })
+
+  const totalPages = Math.ceil(filtered.length / perPage)
+  const paginatedVendas = filtered.slice((page - 1) * perPage, page * perPage)
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -74,10 +86,24 @@ export default function VendasPage() {
 
       <main className="p-4 flex flex-col gap-4">
         {/* Header da página */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Listagem de Vendas</h2>
-          <span className="text-xs text-white/40">
-            {vendas.length} resultado{vendas.length !== 1 ? 's' : ''} encontrado{vendas.length !== 1 ? 's' : ''}
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-white shrink-0">Listagem de Vendas</h2>
+          <div className="flex items-center gap-3 flex-1 max-w-sm">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1) }}
+              placeholder="Buscar por nome ou CPF..."
+              className="w-full rounded-xl px-4 py-2 text-sm outline-none"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: 'white',
+              }}
+            />
+          </div>
+          <span className="text-xs text-white/40 shrink-0">
+            {filtered.length} resultado{filtered.length !== 1 ? 's' : ''}
           </span>
         </div>
 
