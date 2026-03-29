@@ -28,15 +28,14 @@ export default function DashboardPage() {
           <RevenueChart />
         </div>
 
-        {/* Row 2 col 2 — Card produto (alinhado com RevenueChart) */}
+        {/* Col 2 rows 1-2 — Card produto (alinhado topo KPIs até fim RevenueChart) */}
         <div
           className="rounded-2xl flex items-center justify-center p-4 group"
           style={{
             gridColumn: '2',
-            gridRow: '2',
+            gridRow: '1 / 3',
             border: '1px solid rgba(255,255,255,0.08)',
             background: 'rgba(255,255,255,0.03)',
-            alignSelf: 'start',
           }}
         >
           <img
