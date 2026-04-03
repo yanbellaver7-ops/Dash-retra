@@ -11,7 +11,7 @@ import StatesSales from '@/components/StatesSales'
 import DailySalesCards from '@/components/DailySalesCards'
 import BrazilMap from '@/components/BrazilMap'
 import DateFilter, { DateRange } from '@/components/DateFilter'
-import { mockTransactions, mockStatesSales } from '@/lib/mock-data'
+import { mockTransactions } from '@/lib/mock-data'
 import { formatBRL } from '@/lib/utils'
 
 interface KPIData {
@@ -20,7 +20,16 @@ interface KPIData {
   totalPedidos: number
 }
 
-export default function RetraPage() {
+const bumbumStatesSales = [
+  { uf: 'SP', nome: 'São Paulo',           valor: 0, percentual: 0, color: '#14B8A6' },
+  { uf: 'SC', nome: 'Santa Catarina',      valor: 0, percentual: 0, color: '#14B8A6' },
+  { uf: 'RJ', nome: 'Rio de Janeiro',      valor: 0, percentual: 0, color: '#14B8A6' },
+  { uf: 'MG', nome: 'Minas Gerais',        valor: 0, percentual: 0, color: '#14B8A6' },
+  { uf: 'RS', nome: 'Rio Grande do Sul',   valor: 0, percentual: 0, color: '#14B8A6' },
+  { uf: 'PR', nome: 'Paraná',              valor: 0, percentual: 0, color: '#14B8A6' },
+]
+
+export default function BumbumPage() {
   const [dateRange, setDateRange] = useState<DateRange>({ from: '', to: '' })
   const [kpis, setKpis] = useState<KPIData>({ receitaTotal: 0, ticketMedio: 0, totalPedidos: 0 })
 
@@ -30,7 +39,11 @@ export default function RetraPage() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
     async function fetchKPIs() {
-      let query = supabase.from('vendas').select('valor').in('status', ['paid', 'approved'])
+      let query = supabase
+        .from('vendas')
+        .select('valor')
+        .in('status', ['paid', 'approved'])
+        .ilike('produto_nome', '%bumbum%')
       if (dateRange.from) query = (query as any).gte('created_at', `${dateRange.from}T00:00:00.000Z`)
       if (dateRange.to)   query = (query as any).lte('created_at', `${dateRange.to}T23:59:59.999Z`)
       const { data } = await query
@@ -44,9 +57,9 @@ export default function RetraPage() {
   }, [dateRange])
 
   const kpiCards = [
-    { label: 'Receita Total', value: formatBRL(kpis.receitaTotal), change: 0, positive: true },
-    { label: 'Ticket Médio',  value: formatBRL(kpis.ticketMedio),  change: 0, positive: true },
-    { label: 'Total de Pedidos', value: String(kpis.totalPedidos), change: 0, positive: true },
+    { label: 'Receita Total',    value: formatBRL(kpis.receitaTotal), change: 0, positive: true },
+    { label: 'Ticket Médio',     value: formatBRL(kpis.ticketMedio),  change: 0, positive: true },
+    { label: 'Total de Pedidos', value: String(kpis.totalPedidos),    change: 0, positive: true },
   ]
 
   return (
@@ -66,50 +79,46 @@ export default function RetraPage() {
           {/* Row 1 col 1 — KPI Cards */}
           <div className="grid grid-cols-3 gap-4" style={{ gridColumn: '1', gridRow: '1' }}>
             {kpiCards.map((kpi) => (
-              <KPICard key={kpi.label} {...kpi} glowColor="purple" />
+              <KPICard key={kpi.label} {...kpi} glowColor="teal" />
             ))}
           </div>
 
           {/* Row 2 col 1 — RevenueChart */}
           <div style={{ gridColumn: '1', gridRow: '2' }}>
-            <RevenueChart glowColor="purple" />
+            <RevenueChart glowColor="teal" showTotal={false} />
           </div>
 
-          {/* Col 2 rows 1-2 — Foto do produto */}
+          {/* Col 2 rows 1-2 — Card produto */}
           <div
-            className="rounded-2xl flex items-center justify-center p-4 group"
+            className="rounded-2xl flex items-center justify-center p-4"
             style={{
               gridColumn: '2',
               gridRow: '1 / 3',
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(20,184,166,0.15)',
+              background: 'rgba(20,184,166,0.03)',
             }}
           >
-            <img
-              src="/RETRA-MAX_CAPS_MOCKUP.png"
-              alt="Retra Max"
-              className="w-full max-h-[480px] object-contain transition-transform duration-700 ease-in-out group-hover:rotate-12 group-hover:scale-110"
-            />
+            <p className="text-xs text-white/20">Foto em breve</p>
           </div>
 
           {/* Row 3 col 1 — Daily Sales Cards */}
           <div style={{ gridColumn: '1', gridRow: '3' }}>
-            <DailySalesCards glowColor="purple" dateFrom={dateRange.from} dateTo={dateRange.to} />
+            <DailySalesCards productFilter="bumbum" glowColor="teal" dateFrom={dateRange.from} dateTo={dateRange.to} />
           </div>
 
           {/* Row 3 col 2 — MonthlyRevenue */}
           <div style={{ gridColumn: '2', gridRow: '3' }}>
-            <MonthlyRevenue transactions={mockTransactions} glowColor="purple" />
+            <MonthlyRevenue transactions={mockTransactions} glowColor="teal" />
           </div>
 
           {/* Row 4 col 1 — Brazil Map */}
           <div style={{ gridColumn: '1', gridRow: '4' }}>
-            <BrazilMap glowColor="purple" dateFrom={dateRange.from} dateTo={dateRange.to} showMap={false} />
+            <BrazilMap productFilter="bumbum" accentColor="#14B8A6" glowColor="teal" dateFrom={dateRange.from} dateTo={dateRange.to} showMap={false} />
           </div>
 
           {/* Row 4 col 2 — StatesSales */}
           <div style={{ gridColumn: '2', gridRow: '4' }}>
-            <StatesSales states={mockStatesSales} />
+            <StatesSales states={bumbumStatesSales} />
           </div>
 
         </div>

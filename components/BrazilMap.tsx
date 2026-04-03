@@ -13,15 +13,34 @@ interface StateData {
   percent: number
 }
 
-function interpolateColor(percent: number): string {
-  const opacity = 0.15 + (percent / 100) * 0.75
-  return `rgba(168, 85, 247, ${opacity.toFixed(2)})`
+interface Props {
+  productFilter?: string
+  accentColor?: string
+  glowColor?: 'purple' | 'teal' | 'duo'
+  dateFrom?: string
+  dateTo?: string
+  showMap?: boolean
 }
 
-export default function BrazilMap() {
+function interpolateColor(percent: number, hue: number): string {
+  const opacity = 0.15 + (percent / 100) * 0.75
+  return `hsla(${hue}, 75%, 55%, ${opacity.toFixed(2)})`
+}
+
+export default function BrazilMap({
+  productFilter,
+  accentColor = '#A855F7',
+  glowColor = 'purple',
+  dateFrom,
+  dateTo,
+  showMap = true,
+}: Props) {
   const [stateData, setStateData] = useState<Record<string, StateData>>({})
   const [tooltip, setTooltip] = useState<{ name: string; sigla: string; count: number; percent: number } | null>(null)
   const [mounted, setMounted] = useState(false)
+
+  const hue = glowColor === 'teal' ? 175 : 280
+  const hoverFill = glowColor === 'teal' ? 'rgba(20,184,166,0.6)' : 'rgba(168,85,247,0.6)'
 
   useEffect(() => {
     setMounted(true)
@@ -29,11 +48,15 @@ export default function BrazilMap() {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
-    async function fetch() {
-      const { data } = await supabase
+    async function fetchData() {
+      let query = supabase
         .from('vendas')
         .select('estado')
         .in('status', ['paid', 'approved'])
+      if (productFilter) query = (query as any).ilike('produto_nome', `%${productFilter}%`)
+      if (dateFrom) query = (query as any).gte('created_at', `${dateFrom}T00:00:00.000Z`)
+      if (dateTo)   query = (query as any).lte('created_at', `${dateTo}T23:59:59.999Z`)
+      const { data } = await query
       if (!data || data.length === 0) return
       const total = data.length
       const counts: Record<string, number> = {}
@@ -46,11 +69,13 @@ export default function BrazilMap() {
       })
       setStateData(result)
     }
-    fetch()
-  }, [])
+    fetchData()
+  }, [productFilter, dateFrom, dateTo])
+
+  const top5 = Object.values(stateData).sort((a, b) => b.count - a.count).slice(0, 5)
 
   return (
-    <GlowCard className="p-5">
+    <GlowCard className="p-5 flex flex-col" glowColor={glowColor}>
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm text-white/50 font-medium">Vendas por Estado</p>
         {Object.keys(stateData).length > 0 && (
@@ -58,23 +83,23 @@ export default function BrazilMap() {
         )}
       </div>
 
-      <div className="flex gap-4 items-start">
-        {/* Mapa */}
-        <div className="flex-1 relative" style={{ minHeight: 320 }}>
+      {/* Mapa — apenas no Dashboard */}
+      {showMap && (
+        <div className="relative overflow-hidden rounded-xl mb-4" style={{ height: 260 }}>
           {tooltip && (
             <div
               className="absolute top-2 left-2 z-20 px-3 py-2 rounded-xl text-xs pointer-events-none"
-              style={{ background: 'rgba(13,11,26,0.95)', border: '1px solid rgba(168,85,247,0.3)' }}
+              style={{ background: 'rgba(13,11,26,0.95)', border: `1px solid ${accentColor}4D` }}
             >
               <p className="text-white font-semibold">{tooltip.name} ({tooltip.sigla})</p>
-              <p style={{ color: '#A855F7' }}>{tooltip.count} venda{tooltip.count !== 1 ? 's' : ''} — {tooltip.percent}%</p>
+              <p style={{ color: accentColor }}>{tooltip.count} venda{tooltip.count !== 1 ? 's' : ''} — {tooltip.percent}%</p>
             </div>
           )}
           {mounted && (
             <ComposableMap
               projection="geoMercator"
-              projectionConfig={{ scale: 750, center: [-54, -15] }}
-              style={{ width: '100%', height: '320px' }}
+              projectionConfig={{ scale: 980, center: [-54, -15] }}
+              style={{ width: '100%', height: '260px' }}
             >
               <Geographies geography={GEO_URL}>
                 {({ geographies }) =>
@@ -85,12 +110,12 @@ export default function BrazilMap() {
                       <Geography
                         key={geo.rsmKey}
                         geography={geo}
-                        fill={data ? interpolateColor(data.percent) : 'rgba(255,255,255,0.08)'}
+                        fill={data ? interpolateColor(data.percent, hue) : 'rgba(255,255,255,0.08)'}
                         stroke="rgba(255,255,255,0.15)"
                         strokeWidth={0.6}
                         style={{
                           default: { outline: 'none', transition: 'fill 0.2s' },
-                          hover: { outline: 'none', fill: 'rgba(168,85,247,0.6)', cursor: 'pointer' },
+                          hover: { outline: 'none', fill: hoverFill, cursor: 'pointer' },
                           pressed: { outline: 'none' },
                         }}
                         onMouseEnter={() => setTooltip({ name: geo.properties.name || sigla, sigla, count: data?.count || 0, percent: data?.percent || 0 })}
@@ -103,28 +128,29 @@ export default function BrazilMap() {
             </ComposableMap>
           )}
         </div>
+      )}
 
-        {/* Top 5 */}
-        <div className="flex flex-col gap-2 min-w-[130px]">
-          <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Top 5 estados</p>
-          {Object.values(stateData).length === 0 ? (
-            <p className="text-xs text-white/20">Sem dados ainda.</p>
-          ) : (
-            Object.values(stateData)
-              .sort((a, b) => b.count - a.count)
-              .slice(0, 5)
-              .map((s, i) => (
-                <div key={s.sigla} className="flex items-center gap-2">
-                  <span className="text-xs text-white/20 w-3">{i + 1}</span>
-                  <span className="text-xs text-white/70 font-semibold w-6">{s.sigla}</span>
-                  <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
-                    <div className="h-full rounded-full" style={{ width: `${s.percent}%`, background: 'linear-gradient(90deg, #7C3AED, #A855F7)' }} />
-                  </div>
-                  <span className="text-xs text-white/40 w-8 text-right">{s.percent}%</span>
-                </div>
-              ))
-          )}
-        </div>
+      {/* Lista de estados */}
+      <div className="flex flex-col gap-3">
+        {top5.length === 0 ? (
+          <p className="text-xs text-white/20">Sem dados ainda.</p>
+        ) : (
+          top5.map((s, i) => (
+            <div key={s.sigla} className="flex items-center gap-2">
+              <span className="text-xs text-white/20 w-3 shrink-0">{i + 1}</span>
+              <span className="text-xs text-white/70 font-semibold w-6 shrink-0">{s.sigla}</span>
+              <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                <div
+                  className="h-full rounded-full transition-all duration-700"
+                  style={{ width: `${s.percent}%`, background: `linear-gradient(90deg, ${accentColor}88, ${accentColor})` }}
+                />
+              </div>
+              <span className="text-xs font-bold w-9 text-right shrink-0" style={{ color: accentColor }}>
+                {s.percent}%
+              </span>
+            </div>
+          ))
+        )}
       </div>
     </GlowCard>
   )

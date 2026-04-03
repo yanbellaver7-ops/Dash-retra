@@ -8,11 +8,11 @@ interface Transaction {
   positive: boolean
 }
 
-export default function MonthlyRevenue({ transactions }: { transactions: Transaction[] }) {
+export default function MonthlyRevenue({ transactions, glowColor = 'purple' }: { transactions: Transaction[]; glowColor?: 'purple' | 'teal' }) {
   const total = transactions.reduce((acc, t) => acc + t.valor, 0)
 
   return (
-    <GlowCard className="p-3">
+    <GlowCard className="p-3" glowColor={glowColor}>
       <p className="text-xs font-semibold text-white/50 mb-2">Últimas Vendas</p>
 
       <p

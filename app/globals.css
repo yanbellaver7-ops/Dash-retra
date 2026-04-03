@@ -17,11 +17,7 @@
   --background: #ede9f8;
 }
 
-/* Navbar: gradiente roxo, texto e logo brancos */
-.light-mode nav {
-  background: linear-gradient(90deg, #7C3AED, #A855F7) !important;
-  border-color: rgba(124,58,237,0.3) !important;
-}
+/* Navbar: texto e logo brancos em light mode */
 
 .light-mode nav a,
 .light-mode nav button {
@@ -115,6 +111,14 @@ html, body {
 
 .gradient-purple-text {
   background: linear-gradient(90deg, #ffffff 0%, #c084fc 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.gradient-teal-text {
+  background: linear-gradient(90deg, #ffffff 0%, #5eead4 50%, #0d9488 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

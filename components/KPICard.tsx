@@ -5,11 +5,12 @@ interface KPICardProps {
   value: string
   change: number
   positive: boolean
+  glowColor?: 'purple' | 'teal'
 }
 
-export default function KPICard({ label, value, change, positive }: KPICardProps) {
+export default function KPICard({ label, value, change, positive, glowColor = 'purple' }: KPICardProps) {
   return (
-    <GlowCard className="p-5">
+    <GlowCard className="p-5" glowColor={glowColor}>
       <div className="flex items-start justify-between mb-3">
         <p className="text-sm text-white/50 font-medium">{label}</p>
         <div
