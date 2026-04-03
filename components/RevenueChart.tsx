@@ -43,30 +43,37 @@ function CustomTooltip({ active, payload, label }: any) {
   )
 }
 
-export default function RevenueChart() {
+interface Props {
+  glowColor?: 'purple' | 'teal' | 'duo'
+  showTotal?: boolean
+}
+
+export default function RevenueChart({ glowColor = 'purple', showTotal = true }: Props) {
   const [period, setPeriod] = useState('Mensal')
   const data = period === 'Semanal' ? mockWeeklyData : mockChartData
   const xKey = period === 'Semanal' ? 'day' : 'month'
 
   return (
-    <GlowCard className="p-5">
+    <GlowCard className="p-5" glowColor={glowColor}>
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-sm text-white/50">Receita Total</p>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span
-              className="text-3xl font-bold gradient-purple-text"
-              style={{ fontFamily: 'var(--font-inter), sans-serif' }}
-            >
-              R$ 0,00
-            </span>
-            <span
-              className="text-sm font-semibold px-2 py-0.5 rounded-full"
-              style={{ color: 'rgba(255,255,255,0.8)', background: 'rgba(255,255,255,0.08)' }}
-            >
-              +0%
-            </span>
-          </div>
+          {showTotal && (
+            <div className="flex items-baseline gap-2 mt-1">
+              <span
+                className={`text-3xl font-bold ${glowColor === 'teal' ? 'gradient-teal-text' : 'gradient-purple-text'}`}
+                style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+              >
+                R$ 0,00
+              </span>
+              <span
+                className="text-sm font-semibold px-2 py-0.5 rounded-full"
+                style={{ color: 'rgba(255,255,255,0.8)', background: 'rgba(255,255,255,0.08)' }}
+              >
+                +0%
+              </span>
+            </div>
+          )}
         </div>
 
         <div
