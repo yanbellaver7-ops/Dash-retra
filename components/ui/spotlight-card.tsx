@@ -6,7 +6,7 @@ import { useTheme } from '@/lib/theme-context'
 interface GlowCardProps {
   children: ReactNode
   className?: string
-  glowColor?: 'blue' | 'purple' | 'green' | 'red' | 'orange'
+  glowColor?: 'blue' | 'purple' | 'green' | 'red' | 'orange' | 'teal' | 'duo'
 }
 
 const glowColorMap = {
@@ -15,6 +15,28 @@ const glowColorMap = {
   green: { base: 120 },
   red: { base: 0 },
   orange: { base: 30 },
+  teal: { base: 175 },
+  duo: { base: 228 }, // valor inicial — sobrescrito dinamicamente
+}
+
+const lightGradients: Record<string, string> = {
+  purple: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+  teal: 'linear-gradient(135deg, #0D9488, #14B8A6)',
+  duo: 'linear-gradient(135deg, #7C3AED 0%, #5b21b6 40%, #0D9488 100%)',
+  blue: 'linear-gradient(135deg, #1D4ED8, #3B82F6)',
+  green: 'linear-gradient(135deg, #15803D, #22C55E)',
+  red: 'linear-gradient(135deg, #B91C1C, #EF4444)',
+  orange: 'linear-gradient(135deg, #C2410C, #F97316)',
+}
+
+const lightBorders: Record<string, string> = {
+  purple: 'rgba(168,85,247,0.4)',
+  teal: 'rgba(20,184,166,0.4)',
+  duo: 'rgba(140,70,200,0.4)',
+  blue: 'rgba(59,130,246,0.4)',
+  green: 'rgba(34,197,94,0.4)',
+  red: 'rgba(239,68,68,0.4)',
+  orange: 'rgba(249,115,22,0.4)',
 }
 
 const beforeAfterStyles = `
@@ -79,16 +101,28 @@ const GlowCard: React.FC<GlowCardProps> = ({
   useEffect(() => {
     const syncPointer = (e: PointerEvent) => {
       const { clientX: x, clientY: y } = e
-      if (cardRef.current) {
-        cardRef.current.style.setProperty('--x', x.toFixed(2))
-        cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2))
-        cardRef.current.style.setProperty('--y', y.toFixed(2))
-        cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2))
+      if (!cardRef.current) return
+
+      cardRef.current.style.setProperty('--x', x.toFixed(2))
+      cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2))
+      cardRef.current.style.setProperty('--y', y.toFixed(2))
+      cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2))
+
+      // Modo duo: interpola o hue entre teal (175) e roxo (280) conforme X do mouse
+      if (glowColor === 'duo') {
+        const xp = x / window.innerWidth
+        const hue = Math.round(175 + xp * (280 - 175))
+        cardRef.current.style.setProperty('--hue', String(hue))
+        cardRef.current.style.backgroundImage = `radial-gradient(
+          var(--spotlight-size) var(--spotlight-size) at
+          calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+          hsl(${hue} 80% 60% / 0.06), transparent
+        )`
       }
     }
     document.addEventListener('pointermove', syncPointer)
     return () => document.removeEventListener('pointermove', syncPointer)
-  }, [])
+  }, [glowColor])
 
   const { base } = glowColorMap[glowColor]
 
@@ -118,8 +152,8 @@ const GlowCard: React.FC<GlowCardProps> = ({
         touchAction: 'none',
       } as React.CSSProperties
     : {
-        background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-        border: '1px solid rgba(168,85,247,0.4)',
+        background: lightGradients[glowColor] || lightGradients.purple,
+        border: `1px solid ${lightBorders[glowColor] || lightBorders.purple}`,
         position: 'relative',
         touchAction: 'none',
       }
