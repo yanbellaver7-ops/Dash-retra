@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { useEffect, useRef, useState } from 'react'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import Sidebar from '@/components/Sidebar'
 import Header from '@/components/Header'
 
@@ -18,13 +18,15 @@ export default function ChamadosPage() {
   const [chamados, setChamados] = useState<Chamado[]>([])
   const [loading, setLoading] = useState(true)
   const [resolvendo, setResolvendo] = useState<string | null>(null)
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabaseRef = useRef<SupabaseClient | null>(null)
 
   useEffect(() => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    supabaseRef.current = supabase
+
     async function fetchChamados() {
       const { data } = await supabase
         .from('chamados')
@@ -62,8 +64,9 @@ export default function ChamadosPage() {
   }, [])
 
   async function marcarResolvido(id: string) {
+    if (!supabaseRef.current) return
     setResolvendo(id)
-    await supabase.from('chamados').update({ status: 'resolvido' }).eq('id', id)
+    await supabaseRef.current.from('chamados').update({ status: 'resolvido' }).eq('id', id)
     setResolvendo(null)
   }
 
